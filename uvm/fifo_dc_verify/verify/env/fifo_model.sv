@@ -1,10 +1,9 @@
-`ifndef MYFIFO_MODEL__SV
-`define MYFIFO_MODEL__SV
+`ifndef FIFO_MODEL__SV
+`define FIFO_MODEL__SV
 
-// class myfifo_model extends uvm_component;
-class myfifo_model #(parameter int DW = 8) extends uvm_component;
+class fifo_model #(parameter int DW = 8) extends uvm_component;
 
-   `uvm_component_utils(myfifo_model)
+   `uvm_component_utils(fifo_model)
 
    uvm_get_port #(fifo_data_item)  port_data;
    uvm_analysis_port #(fifo_data_item)  ap_data;
@@ -22,11 +21,11 @@ class myfifo_model #(parameter int DW = 8) extends uvm_component;
 
 endclass 
 
-function myfifo_model::new(string name, uvm_component parent);
+function fifo_model::new(string name, uvm_component parent);
    super.new(name, parent);
 endfunction 
 
-function void myfifo_model::build_phase(uvm_phase phase);
+function void fifo_model::build_phase(uvm_phase phase);
    super.build_phase(phase);
 
    port_data = new("port_data", this);
@@ -35,7 +34,7 @@ function void myfifo_model::build_phase(uvm_phase phase);
    // port_oact = new("port_oact", this);
 endfunction : build_phase
 
-task myfifo_model::main_phase(uvm_phase phase);
+task fifo_model::main_phase(uvm_phase phase);
    // super.main_phase(phase);
    fifo_data_item get_data;
    fifo_data_item new_data;
@@ -88,4 +87,4 @@ task myfifo_model::main_phase(uvm_phase phase);
    `uvm_info(get_type_name(), "exit main phase.", UVM_HIGH)
 endtask : main_phase
 
-`endif // MYFIFO_MODEL__SV
+`endif // FIFO_MODEL__SV

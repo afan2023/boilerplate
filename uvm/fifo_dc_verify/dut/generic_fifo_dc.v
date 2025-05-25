@@ -190,7 +190,7 @@ module generic_fifo_dc #(
    // 	.di     (   din         )
    // 	);
 
-   my_dpram    #(.addr_width(aw), .data_width(dw)) u1 (
+   genfifo_dpram    #(.addr_width(aw), .data_width(dw)) u1 (
       .wclk    (  wr_clk      ),
       .wrst    (  !rst        ),
       .we      (  we          ),

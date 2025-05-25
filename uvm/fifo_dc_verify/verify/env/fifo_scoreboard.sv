@@ -1,27 +1,27 @@
-`ifndef MY_SCOREBOARD__SV
-`define MY_SCOREBOARD__SV
-class my_scoreboard extends uvm_scoreboard;
+`ifndef FIFO_SCOREBOARD__SV
+`define FIFO_SCOREBOARD__SV
+class fifo_scoreboard extends uvm_scoreboard;
    fifo_data_item  expect_queue[$];
    uvm_blocking_get_port #(fifo_data_item)  exp_data_port;
    uvm_blocking_get_port #(fifo_data_item)  act_data_port;
-   `uvm_component_utils(my_scoreboard)
+   `uvm_component_utils(fifo_scoreboard)
 
    extern function new(string name, uvm_component parent = null);
    extern virtual function void build_phase(uvm_phase phase);
    extern virtual task main_phase(uvm_phase phase);
 endclass 
 
-function my_scoreboard::new(string name, uvm_component parent = null);
+function fifo_scoreboard::new(string name, uvm_component parent = null);
    super.new(name, parent);
 endfunction 
 
-function void my_scoreboard::build_phase(uvm_phase phase);
+function void fifo_scoreboard::build_phase(uvm_phase phase);
    super.build_phase(phase);
    exp_data_port = new("exp_data_port", this);
    act_data_port = new("act_data_port", this);
 endfunction 
 
-task my_scoreboard::main_phase(uvm_phase phase);
+task fifo_scoreboard::main_phase(uvm_phase phase);
    fifo_data_item  get_expect,  get_actual, tmp_tran;
    bit result;
    
@@ -41,10 +41,10 @@ task my_scoreboard::main_phase(uvm_phase phase);
             tmp_tran = expect_queue.pop_front();
             result = get_actual.compare(tmp_tran);
             if(result) begin 
-               `uvm_info("my_scoreboard", "Compare SUCCESSFULLY", UVM_LOW);
+               `uvm_info("fifo_scoreboard", "Compare SUCCESSFULLY", UVM_LOW);
             end
             else begin
-               `uvm_error("my_scoreboard", "Compare FAILED");
+               `uvm_error("fifo_scoreboard", "Compare FAILED");
                $display("the expect data is");
                tmp_tran.print();
                $display("the actual data is");
@@ -52,7 +52,7 @@ task my_scoreboard::main_phase(uvm_phase phase);
             end
          end
          else begin
-            `uvm_error("my_scoreboard", "Received from DUT, while Expect Queue is empty");
+            `uvm_error("fifo_scoreboard", "Received from DUT, while Expect Queue is empty");
             $display("the unexpected data is");
             get_actual.print();
          end 

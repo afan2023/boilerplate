@@ -1,5 +1,5 @@
 
-module my_dpram #(
+module genfifo_dpram #(
     parameter addr_width = 8    ,
     parameter data_width = 8
 )(
@@ -17,7 +17,7 @@ module my_dpram #(
 );
 
     localparam  ram_depth   =   1<<addr_width    ;
-    reg [data_width-1:0]    ram [ram_depth-1:0] ;
+    reg [data_width-1:0]    ram [0:ram_depth-1] ;
 
     always @(posedge wclk, posedge wrst) begin
         if (wrst)
@@ -28,7 +28,7 @@ module my_dpram #(
 
     always @(posedge rclk, posedge rrst) begin
         if (rrst)
-            ; //$display("Que faire?");
+            do <= {data_width{1'b0}};
         else if (oe)
             do <= ram[raddr];
         else

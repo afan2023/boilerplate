@@ -1,10 +1,10 @@
-`ifndef DC_FIFO_IF__SV
-`define DC_FIFO_IF__SV
+`ifndef FIFO_DC_IF__SV
+`define FIFO_DC_IF__SV
 /**
  * Essential interface of a DC FIFO.
  */
 
-interface dc_fifo_if 
+interface fifo_dc_if 
 #(parameter DW = 8)
 (input wclk, input rclk);
 
@@ -17,4 +17,4 @@ interface dc_fifo_if
    
 endinterface
 
-`endif // DC_FIFO_IF__SV
+`endif // FIFO_DC_IF__SV

@@ -1,14 +1,13 @@
-`ifndef GENFIFO_DRIVER__SV
-`define GENFIFO_DRIVER__SV
+`ifndef FIFO_DRIVER__SV
+`define FIFO_DRIVER__SV
 
-class genfifo_driver extends uvm_driver #(genfifo_transaction);
+class fifo_driver extends uvm_driver #(fifo_transaction);
 
-   `uvm_component_utils(genfifo_driver)
+   `uvm_component_utils(fifo_driver)
    
-   virtual dc_fifo_if       fifo_vif ;
-   virtual genfifo_rst_if  rst_vif  ;
+   virtual fifo_dc_if   fifo_vif ;
+   virtual fifo_rst_if  rst_vif  ;
 
-   // genfifo_config m_config;
    event    rst_event;
 
    function new(string name, uvm_component parent);
@@ -18,9 +17,9 @@ class genfifo_driver extends uvm_driver #(genfifo_transaction);
    virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
       // simply take in the vif passed on from the tb
-      if(!uvm_config_db#(virtual dc_fifo_if)::get(this, "", "fifo_vif", fifo_vif))
+      if(!uvm_config_db#(virtual fifo_dc_if)::get(this, "", "fifo_vif", fifo_vif))
          `uvm_fatal(get_type_name(), "virtual interface must be set for fifo_vif!!!")
-      if(!uvm_config_db#(virtual genfifo_rst_if)::get(this, "", "rst_vif", rst_vif))
+      if(!uvm_config_db#(virtual fifo_rst_if)::get(this, "", "rst_vif", rst_vif))
          `uvm_fatal(get_type_name(), "virtual interface must be set for rst_vif!!!")
    endfunction
 
@@ -37,11 +36,11 @@ class genfifo_driver extends uvm_driver #(genfifo_transaction);
    endtask : main_phase
    
    /** actually drive one data item */
-   extern task drive_one_req(genfifo_transaction greq);
+   extern task drive_one_req(fifo_transaction greq);
 
-endclass : genfifo_driver
+endclass : fifo_driver
 
-task genfifo_driver::drive_one_req(genfifo_transaction greq);
+task fifo_driver::drive_one_req(fifo_transaction greq);
    int wcnt;
    int rcnt;
 
@@ -125,4 +124,4 @@ task genfifo_driver::drive_one_req(genfifo_transaction greq);
    `uvm_info(get_type_name(), "end drive once.", UVM_HIGH)
 endtask : drive_one_req
 
-`endif // GENFIFO_DRIVER__SV
+`endif // FIFO_DRIVER__SV

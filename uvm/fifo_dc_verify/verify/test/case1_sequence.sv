@@ -1,11 +1,11 @@
 `ifndef CASE1_SEQUENCE__SV
 `define CASE1_SEQUENCE__SV
 
-// class case1_sequence extends uvm_sequence(#genfifo_transaction);
-class case1_sequence extends genfifo_base_sequence;
+// class case1_sequence extends uvm_sequence(#fifo_transaction);
+class case1_sequence extends fifo_base_sequence;
    `uvm_object_utils(case1_sequence);
     
-   genfifo_transaction tr;
+   fifo_transaction tr;
 
    function new(string name = "case1_seq");
       super.new(name);

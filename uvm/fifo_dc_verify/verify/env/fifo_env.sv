@@ -1,13 +1,13 @@
-`ifndef MY_ENV__SV
-`define MY_ENV__SV
+`ifndef FIFO_ENV__SV
+`define FIFO_ENV__SV
 
-class my_env extends uvm_env;
-   `uvm_component_utils(my_env)
+class fifo_env extends uvm_env;
+   `uvm_component_utils(fifo_env)
 
-   genfifo_agent  i_agt;
-   genfifo_oagent o_agt;
-   myfifo_model   mdl;
-   my_scoreboard  scb;
+   fifo_agent  i_agt; 
+   fifo_oagent o_agt;
+   fifo_model   mdl;
+   fifo_scoreboard  scb;
    
    uvm_tlm_analysis_fifo #(fifo_data_item) iagt_mdl_data_fifo;
    uvm_tlm_analysis_fifo #(fifo_action_item) iagt_mdl_act_fifo;
@@ -15,20 +15,20 @@ class my_env extends uvm_env;
    // uvm_tlm_analysis_fifo #(fifo_action_item) oagt_mdl_act_fifo;
    uvm_tlm_analysis_fifo #(fifo_data_item) oagt_scb_fifo;
    
-   function new(string name = "my_env", uvm_component parent);
+   function new(string name = "fifo_env", uvm_component parent);
       super.new(name, parent);
    endfunction
 
    extern virtual function void build_phase(uvm_phase phase);
    extern virtual function void connect_phase(uvm_phase phase);
-endclass : my_env
+endclass : fifo_env
 
-function void my_env::build_phase(uvm_phase phase);
+function void fifo_env::build_phase(uvm_phase phase);
       super.build_phase(phase);
       // components
-      i_agt = genfifo_agent::type_id::create("i_agt", this);
-      o_agt = genfifo_oagent::type_id::create("o_agt", this);
-      scb = my_scoreboard::type_id::create("scb", this);
+      i_agt = fifo_agent::type_id::create("i_agt", this);
+      o_agt = fifo_oagent::type_id::create("o_agt", this);
+      scb = fifo_scoreboard::type_id::create("scb", this);
       mdl = new("mdl", this);
       // message channels
       iagt_mdl_data_fifo = new("iagt_mdl_data_fifo", this);
@@ -38,7 +38,7 @@ function void my_env::build_phase(uvm_phase phase);
       oagt_scb_fifo = new("oagt_scb_fifo", this);
 endfunction : build_phase
 
-function void my_env::connect_phase(uvm_phase phase);
+function void fifo_env::connect_phase(uvm_phase phase);
    super.connect_phase(phase);
    // i_agt -- mdl, data connection
    i_agt.ap_data.connect(iagt_mdl_data_fifo.analysis_export); // connect to a uvm_analysis_imp in the fifo

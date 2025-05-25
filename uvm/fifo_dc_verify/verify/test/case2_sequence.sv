@@ -3,7 +3,7 @@
 
 import uvm_pkg::*;
 
-class case2_reset_seq extends genfifo_base_sequence;
+class case2_reset_seq extends fifo_base_sequence;
    `uvm_object_utils(case2_reset_seq);
 
    function new(string name = "case2_reset_seq");
@@ -11,7 +11,7 @@ class case2_reset_seq extends genfifo_base_sequence;
    endfunction : new   
    
    virtual task body();
-      genfifo_transaction tr = new("reset");
+      fifo_transaction tr = new("reset");
       start_item(tr);
       tr.reset = 1'b1;
       tr.rst_time = 120;
@@ -22,9 +22,9 @@ class case2_reset_seq extends genfifo_base_sequence;
    endtask : body
 endclass : case2_reset_seq
 
-class case2_write_seq extends genfifo_base_sequence;
+class case2_write_seq extends fifo_base_sequence;
    `uvm_object_utils(case2_write_seq);
-   genfifo_transaction tr;
+   fifo_transaction tr;
 
    function new(string name = "case2_write_seq");
       super.new(name);
@@ -40,9 +40,9 @@ class case2_write_seq extends genfifo_base_sequence;
    endtask : body
 endclass : case2_write_seq
 
-class case2_read_seq extends genfifo_base_sequence;
+class case2_read_seq extends fifo_base_sequence;
    `uvm_object_utils(case2_read_seq);
-   genfifo_transaction tr;
+   fifo_transaction tr;
 
    function new(string name = "case2_read_seq");
       super.new(name);
@@ -60,7 +60,7 @@ endclass : case2_read_seq
 class case2_vseq extends uvm_sequence;
 
    `uvm_object_utils(case2_vseq)
-   `uvm_declare_p_sequencer(genfifo_sequencer)
+   `uvm_declare_p_sequencer(fifo_sequencer)
    
    function new(string name= "case3_vseq");
       super.new(name);

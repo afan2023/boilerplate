@@ -9,8 +9,8 @@ module th;
    always #30 rclk = ~rclk;
 
    // interfaces
-   genfifo_rst_if rst_if (wclk, rclk);
-   dc_fifo_if     fifo_if(wclk, rclk);
+   fifo_rst_if rst_if (wclk, rclk);
+   fifo_dc_if  fifo_if(wclk, rclk);
 
    // // power on reset
    // initial

@@ -1,9 +1,9 @@
-`ifndef GENFIFO_TRANSACTION__SV
-`define GENFIFO_TRANSACTION__SV
+`ifndef FIFO_TRANSACTION__SV
+`define FIFO_TRANSACTION__SV
 
-class genfifo_transaction #(parameter int DW = 8) extends uvm_sequence_item;
+class fifo_transaction #(parameter int DW = 8) extends uvm_sequence_item;
 
-   `uvm_object_utils(genfifo_transaction);
+   `uvm_object_utils(fifo_transaction);
 
    bit         reset    ;
    bit         clear    ;
@@ -18,7 +18,7 @@ class genfifo_transaction #(parameter int DW = 8) extends uvm_sequence_item;
    //    wcount == wdata.size;
    // }
 
-   function new(string name = "genfifo_transaction");
+   function new(string name = "fifo_transaction");
       super.new();
       reset = 1'b0;
       clear = 1'b0;
@@ -29,16 +29,16 @@ class genfifo_transaction #(parameter int DW = 8) extends uvm_sequence_item;
    extern virtual function void do_print(uvm_printer printer);
    extern virtual function string convert2string();
 
-endclass : genfifo_transaction
+endclass : fifo_transaction
 
-function void genfifo_transaction::do_print(uvm_printer printer);
+function void fifo_transaction::do_print(uvm_printer printer);
    if (printer.knobs.sprint == 0)
       `uvm_info(get_type_name(), convert2string(), UVM_MEDIUM)
    else
       printer.m_string = convert2string();
 endfunction : do_print
 
-function string genfifo_transaction::convert2string();
+function string fifo_transaction::convert2string();
    string ss, s, swd;
    $sformat(s, "%s\n", super.convert2string());
    $sformat(s, {"%s\n",
@@ -51,4 +51,4 @@ function string genfifo_transaction::convert2string();
    return {ss, s, swd};
 endfunction : convert2string
 
-`endif // GENFIFO_TRANSACTION__SV-
+`endif // FIFO_TRANSACTION__SV

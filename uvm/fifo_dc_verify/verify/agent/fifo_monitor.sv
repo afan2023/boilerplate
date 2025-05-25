@@ -1,27 +1,27 @@
-`ifndef GENFIFO_MONITOR__SV
-`define GENFIFO_MONITOR__SV
-class genfifo_monitor extends uvm_monitor;
+`ifndef FIFO_MONITOR__SV
+`define FIFO_MONITOR__SV
+class fifo_monitor extends uvm_monitor;
 
-   `uvm_component_utils(genfifo_monitor)
+   `uvm_component_utils(fifo_monitor)
 
-   virtual dc_fifo_if       fifo_vif ;
-   virtual genfifo_rst_if  rst_vif  ;
+   virtual fifo_dc_if   fifo_vif ;
+   virtual fifo_rst_if  rst_vif  ;
 
    event    rst_event;
 
    uvm_analysis_port #(fifo_data_item) ap_data;
    uvm_analysis_port #(fifo_action_item) ap_act;
 
-   function new(string name = "genfifo_monitor", uvm_component parent = null);
+   function new(string name = "fifo_monitor", uvm_component parent = null);
       super.new(name, parent);
    endfunction
 
    virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
       // simply take in the vif passed on
-      if(!uvm_config_db#(virtual dc_fifo_if)::get(this, "", "fifo_vif", fifo_vif))
+      if(!uvm_config_db#(virtual fifo_dc_if)::get(this, "", "fifo_vif", fifo_vif))
          `uvm_fatal(get_type_name(), "virtual interface must be set for fifo_vif!!!")
-      if(!uvm_config_db#(virtual genfifo_rst_if)::get(this, "", "rst_vif", rst_vif))
+      if(!uvm_config_db#(virtual fifo_rst_if)::get(this, "", "rst_vif", rst_vif))
          `uvm_fatal(get_type_name(), "virtual interface must be set for rst_vif!!!")
       // create the analysis ports
       ap_data = new("ap_data", this);
@@ -29,17 +29,16 @@ class genfifo_monitor extends uvm_monitor;
    endfunction
 
    extern task main_phase(uvm_phase phase);
-   // extern task collect_one_trans(genfifo_transaction tr);
    extern task collect();
 endclass
 
-task genfifo_monitor::main_phase(uvm_phase phase);
+task fifo_monitor::main_phase(uvm_phase phase);
    `uvm_info(get_type_name(), "in main phase...", UVM_HIGH)
    collect();
    `uvm_info(get_type_name(), "exit main phase.", UVM_HIGH)
 endtask
 
-task genfifo_monitor::collect();
+task fifo_monitor::collect();
    fifo_action_item tr;
    fifo_data_item tx, rx;
    `uvm_info(get_type_name(), "begin to collect data items", UVM_HIGH);
@@ -89,4 +88,4 @@ task genfifo_monitor::collect();
    `uvm_info(get_type_name(), "end collect data items", UVM_HIGH)
 endtask : collect
 
-`endif // GENFIFO_MONITOR__SV
+`endif // FIFO_MONITOR__SV
