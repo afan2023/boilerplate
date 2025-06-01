@@ -76,7 +76,7 @@ task fifo_monitor::collect();
 
       forever begin
          @rst_event;
-         `uvm_info(get_type_name(), "a reset / clear detected", UVM_MEDIUM);
+         `uvm_info(get_type_name(), "a reset detected", UVM_MEDIUM);
          tr = new("tr");
          tr.hasreset = 1'b1;
          tr.empty = fifo_vif.empty;

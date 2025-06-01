@@ -5,7 +5,7 @@
  */
 
 interface fifo_dc_if 
-#(parameter DW = 8)
+#(parameter DW = `FIFO_DW)
 (input wclk, input rclk);
 
    logic          re    ;

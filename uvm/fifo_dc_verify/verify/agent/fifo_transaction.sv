@@ -1,29 +1,21 @@
 `ifndef FIFO_TRANSACTION__SV
 `define FIFO_TRANSACTION__SV
 
-class fifo_transaction #(parameter int DW = 8) extends uvm_sequence_item;
+class fifo_transaction #(parameter int DW = `FIFO_DW) extends uvm_sequence_item;
 
    `uvm_object_utils(fifo_transaction);
 
    bit         reset    ;
-   bit         clear    ;
    rand int    rst_time ;
-   rand int    clr_time ;
 
    rand int    rcount   ;  // number of data items to read in
    
    rand bit [DW-1:0] wdata[]  ;  // data to write
-   // int               wcount   ;  // number of data items write, convenient parameter, if keep it, has the wcount_constr as well
-   // constraint wcount_constr{
-   //    wcount == wdata.size;
-   // }
 
    function new(string name = "fifo_transaction");
       super.new();
       reset = 1'b0;
-      clear = 1'b0;
       rcount= 0;
-      // wcount= 0; 
    endfunction
 
    extern virtual function void do_print(uvm_printer printer);
@@ -42,9 +34,9 @@ function string fifo_transaction::convert2string();
    string ss, s, swd;
    $sformat(s, "%s\n", super.convert2string());
    $sformat(s, {"%s\n",
-      "reset: %u; clear: %u; rst_time: %0d; clr_time: %0d;\n",
+      "reset: %u; rst_time: %0d; \n",
       "rcount: %0d; wdata (%0d):\n"},
-      get_full_name(), reset, clear, rst_time, clr_time, 
+      get_full_name(), reset, rst_time, 
       rcount, wdata.size);
    for( int i = 0; i < wdata.size; i++ )
       $sformat(swd, {"%s", " 'h%0h "}, swd, wdata[i]);

@@ -3,10 +3,10 @@
 
 class base_test extends uvm_test;
 
-   fifo_env   env;
+   top_env     env;
    
    function new(string name = "base_test", uvm_component parent = null);
-      super.new(name,parent);
+      super.new(name, parent);
    endfunction
    
    extern virtual function void build_phase(uvm_phase phase);
@@ -17,7 +17,7 @@ endclass
 
 function void base_test::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   env  =  fifo_env::type_id::create("env", this); 
+   env   =  top_env::type_id::create("env", this);
 endfunction
 
 function void base_test::report_phase(uvm_phase phase);

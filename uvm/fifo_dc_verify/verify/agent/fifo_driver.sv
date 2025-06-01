@@ -44,41 +44,25 @@ task fifo_driver::drive_one_req(fifo_transaction greq);
    int wcnt;
    int rcnt;
 
-   `uvm_info(get_type_name(), $sformatf("greq, reset: %z, clear: %z", greq.reset, greq.clear), UVM_HIGH)
+   `uvm_info(get_type_name(), $sformatf("greq, reset: %z", greq.reset), UVM_HIGH)
    `uvm_info(get_type_name(), $sformatf("fifo_vif, empty: %z, full: %z", fifo_vif.empty, fifo_vif.full), UVM_HIGH)
    fork
       // reset
       begin
-         if (greq.reset | greq.clear) begin
+         if (greq.reset) begin
             `uvm_info(get_type_name(), "reset requested...", UVM_HIGH)
-            if (greq.reset) begin
-               rst_vif.rst_n = 1'b0;
-               #greq.rst_time; rst_vif.rst_n = 1'b1;
-            end
-            else begin
-               rst_vif.rst_n = 1'b1;
-            end
-
-            if (greq.clear) begin
-               rst_vif.clr = 1'b1;
-               #greq.clr_time; rst_vif.clr = 1'b0;
-            end
-            else begin
-               rst_vif.clr = 1'b0;
-            end
+            rst_vif.rst_n = 1'b0;
+            #greq.rst_time; rst_vif.rst_n = 1'b1;
             -> rst_event;
-            // `uvm_info(get_type_name(), $sformatf("rst_vif, rst_n: %z, clr: %z", rst_vif.rst_n, rst_vif.clr), UVM_HIGH)
-            // `uvm_info(get_type_name(), $sformatf("fifo_vif, empty: %z, full: %z", fifo_vif.empty, fifo_vif.full), UVM_HIGH)
          end
          else begin
             rst_vif.rst_n = 1'b1;
-            rst_vif.clr = 1'b0;
          end
       end
 
       // read
       begin
-         if (!greq.reset && !greq.clear) // skip while reset is requested
+         if (!greq.reset) // skip while reset is requested
          begin
             rcnt = greq.rcount;
             while(rcnt > 0)
@@ -99,7 +83,7 @@ task fifo_driver::drive_one_req(fifo_transaction greq);
 
       // write
       begin
-         if (!greq.reset && !greq.clear) // skip while reset is requested
+         if (!greq.reset) // skip if reset is requested
          begin
             wcnt = greq.wdata.size;
             while(wcnt > 0)

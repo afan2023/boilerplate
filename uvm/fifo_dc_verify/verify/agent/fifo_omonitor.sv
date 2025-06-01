@@ -38,19 +38,44 @@ task fifo_omonitor::main_phase(uvm_phase phase);
 endtask : main_phase
 
 task fifo_omonitor::collect_one();
-   fifo_action_item act;
    fifo_data_item   rx;
    bit reading = 1'b0;
+   bit fwft = 1'b0;
+   uvm_status_e   status;
+   uvm_reg_data_t value;
+   reg_model p_regm;
+   uvm_config_db#(reg_model)::get(null, "uvm_test_top.env.reg_env", "regmodel", p_regm);
+   // p_regm.rb_control.rg_cfg.peek(status, value);
+   p_regm.rb_control.rg_cfg.rf_fifo_mode.peek(status, value);
+   fwft = value[0];
+   `uvm_info(get_type_name(), {"fifo configuration: ", $sformatf("fwft 'h%0h", fwft)}, UVM_HIGH)
 
-   reading = fifo_vif.re;
-   @(posedge fifo_vif.rclk) 
-   begin
-      if (reading) begin
-         rx = new("rx");
-         rx.wr = 1'b0;
-         rx.data = fifo_vif.dout;
-         `uvm_info(get_type_name(), {"got a data read: ", $sformatf("'h%0h", rx.data)}, UVM_HIGH)
-         #0 ap_data.write(rx);
+   if (fwft) begin
+      // in case fwft, data available in advance
+      rx = new("rx");
+      rx.wr = 1'b0;
+      rx.data = fifo_vif.dout;
+      reading = fifo_vif.re;
+      @(posedge fifo_vif.rclk)
+      begin
+         if (reading) begin
+            `uvm_info(get_type_name(), {"got a data read: ", $sformatf("'h%0h", rx.data)}, UVM_HIGH)
+            #0 ap_data.write(rx);
+         end
+      end
+   end
+   else begin
+      // in case normal
+      reading = fifo_vif.re;
+      @(posedge fifo_vif.rclk) 
+      begin
+         if (reading) begin
+            rx = new("rx");
+            rx.wr = 1'b0;
+            rx.data = fifo_vif.dout;
+            `uvm_info(get_type_name(), {"got a data read: ", $sformatf("'h%0h", rx.data)}, UVM_HIGH)
+            #0 ap_data.write(rx);
+         end
       end
    end
 

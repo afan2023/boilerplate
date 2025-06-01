@@ -1,18 +1,16 @@
 `ifndef FIFO_MODEL__SV
 `define FIFO_MODEL__SV
 
-class fifo_model #(parameter int DW = 8) extends uvm_component;
+class fifo_model extends uvm_component;
 
    `uvm_component_utils(fifo_model)
 
    uvm_get_port #(fifo_data_item)  port_data;
    uvm_analysis_port #(fifo_data_item)  ap_data;
    uvm_get_port #(fifo_action_item) port_act;
-   // uvm_get_port #(fifo_action_item) port_oact;
-   // uvm_analysis_port #(fifo_data_item)  ap_act;
+   uvm_get_port #(reg_action_item) port_reg_act;
 
-   // fifo_data_item data_q[$];
-   logic [DW-1:0] data_q[$];
+   logic [`FIFO_DW-1:0] data_q[$];
    semaphore lock = new(1);
 
    extern function new(string name, uvm_component parent);
@@ -31,25 +29,29 @@ function void fifo_model::build_phase(uvm_phase phase);
    port_data = new("port_data", this);
    ap_data = new("ap_data", this);
    port_act = new("port_act", this);
-   // port_oact = new("port_oact", this);
+   port_reg_act = new("port_reg_act", this);
 endfunction : build_phase
 
 task fifo_model::main_phase(uvm_phase phase);
-   // super.main_phase(phase);
    fifo_data_item get_data;
    fifo_data_item new_data;
    fifo_action_item  get_act;
-   // fifo_action_item  get_oact;
+   reg_action_item   get_reg_act;
 
    `uvm_info(get_type_name(), "in main phase...", UVM_HIGH)
    
    fork
-      // for simplicity now skip verify the reset functionality, but a reset shall clear data in this reference model...
-      // maybe, in case reset/clear functionality itself need be verified w/ uvm,
-      // it could be something like:
-      //    the i_agt collects a reset/clear, the o_agt monitors the "empty" status after a reset/clear,
-      //    besides to clear data in the reference model, the messages should also be checked match, a
-      //    mismatch may alert an error...
+      // shall clear the data on reset
+      forever begin
+         port_reg_act.get(get_reg_act);
+         if (get_reg_act.softreset) begin
+            lock.get();
+            data_q.delete();
+            lock.put();
+            `uvm_info(get_type_name(), "FIFO reset to empty!", UVM_MEDIUM);
+         end
+      end
+
       forever begin
          port_act.get(get_act);
          if (get_act.hasreset) begin

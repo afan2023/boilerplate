@@ -1,11 +1,11 @@
 `ifndef FIFO_DATA_ITEM__SV
 `define FIFO_DATA_ITEM__SV
 
-class fifo_data_item #(parameter int DW = 8) extends uvm_sequence_item;
+class fifo_data_item extends uvm_sequence_item;
 
    `uvm_object_utils(fifo_data_item)
-   bit            wr    ;  // 1: write data; 0: read
-   logic [DW-1:0] data  ;
+   bit   wr ;  // 1: write data; 0: read
+   logic [`FIFO_DW-1:0] data  ;
 
    function new(string name = "fifo_data_item");
       super.new();
